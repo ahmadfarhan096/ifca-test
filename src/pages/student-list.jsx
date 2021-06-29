@@ -88,6 +88,7 @@ const StudentList = () => {
             key: 'name',
             render: name=>{
                 return <a>{name}</a>
+                test
             }
         },
         {
