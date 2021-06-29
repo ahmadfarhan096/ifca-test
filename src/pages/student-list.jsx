@@ -5,7 +5,6 @@ import './student-list.scss'
 
 const StudentList = () => {
 
-    const [input, setInput] = useState
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const { Header, Content, Footer, Sider } = Layout;
@@ -86,10 +85,6 @@ const StudentList = () => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: name=>{
-                return <a>{name}</a>
-                test
-            }
         },
         {
             title: 'Email',
