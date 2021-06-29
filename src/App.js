@@ -1,23 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { Switch, Route } from 'react-router-dom';
+import StudentList from './pages/student-list'
+import { GlobalProvider } from './context/GlobalState';
+
+import 'antd/dist/antd.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <GlobalProvider>
+      <Switch>
+        <Route
+          path='/'
+          exact={true}
+          component={StudentList}
+        />
+
+      </Switch>
+        
+      </GlobalProvider>
     </div>
   );
 }
