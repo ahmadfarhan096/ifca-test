@@ -1,16 +1,10 @@
 .student-list {
     .page-container {
-        width: "fit";
+
+        background-color: #cf4392;
     }
 
-    .header {
-        box-shadow: 1px 1px 1px grey;
-        width: 100%;
-        background: linear-gradient(218.41deg, #442f84 14.07%, #cf4392 75.34%);
-        color: white;
-        padding: 10px 20px;
-        display: flex;
-    }
+   
 
     .table {
         padding: 10px;
@@ -25,5 +19,27 @@
         left: 0;
         width: 100%;
         background-color: white;
+    }
+
+    
+}
+
+.header {
+    box-shadow: 1px 1px 1px grey;
+    width: 100%;
+    background: linear-gradient(218.41deg, #442f84 14.07%, #cf4392 75.34%);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+}
+
+.filter{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    width: 100%;
+
+    @media (min-width: 480px) {
+        flex-direction: row;
     }
 }

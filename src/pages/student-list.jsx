@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Layout, Checkbox, Avatar, Breadcrumb, Input, Button, Modal, Space, Table, Row, Col, Select, Menu, Form } from 'antd';
-import { UserOutlined, DeleteFilled , SearchOutlined, EditFilled, PlusCircleOutlined } from '@ant-design/icons'
+import { UserOutlined, DeleteFilled, SearchOutlined, EditFilled, PlusCircleOutlined } from '@ant-design/icons'
 import './student-list.scss'
 
 const StudentList = () => {
@@ -45,7 +45,7 @@ const StudentList = () => {
             email: 'faris@gmail.com',
             phone: '01116949905',
             address: 'Petaling Jaya, Selangor',
-         
+
         },
         {
             key: '2',
@@ -53,7 +53,7 @@ const StudentList = () => {
             email: 'gurvin@gmail.com',
             phone: '0179876089',
             address: 'Puchong, Selangor',
-          
+
         },
         {
             key: '3',
@@ -68,7 +68,7 @@ const StudentList = () => {
             email: 'gurvin@gmail.com',
             phone: '0179876089',
             address: 'Puchong, Selangor',
-           
+
         },
         {
             key: '5',
@@ -76,7 +76,7 @@ const StudentList = () => {
             email: 'gurvin@gmail.com',
             phone: '0179876089',
             address: 'Puchong, Selangor',
-           
+
         },
     ];
 
@@ -115,74 +115,59 @@ const StudentList = () => {
 
     return (
 
-        <Layout>
+        <Layout style={{ backgroundColor: 'white' }}>
+
             <div className='page-container'>
 
-                <Header style={{
-                    boxShadow: '1px 1px 1px grey',
+                
+                <Row gutter={16}>
+                    <div className='header'>
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                            <div style={{ display: 'flex' }}>
+
+                                <span style={{
+                                    fontWeight: 600,
+                                    fontSize: '20px'
+                                }}>User Administrator System</span>
+                            </div>
+                        </Col>
+
+                        <Col lg={12} md={12} sm={12} xs={12}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
+
+                                <Avatar
+                                    size={30}
+                                    icon={<UserOutlined />}
+                                />
+
+                            </div>
+                        </Col>
+                    </div>
+                </Row>
+
+                <div style={{
+                    padding: '4em',
+                    alignSelf: 'center',
                     width: '100%',
-                    background: 'linear-gradient(218.41deg, #442F84 14.07%, #CF4392 75.34%)',
-                    color: 'white',
-                    display: 'flex'
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
+
                 }}>
 
-                    <Col lg={12} md={12} sm={24} xs={24}>
-                        <div style={{ display: 'flex' }}>
+                    <div style={{ marginBottom: '30px' }}>
+                        <Breadcrumb>
+                            <Breadcrumb.Item style={{ fontSize: '18px', fontWeight: '500' }}>DASHBOARD</Breadcrumb.Item>
+                            <Breadcrumb.Item style={{ fontSize: '18px', fontWeight: '500', color: '#442F84' }}>
+                                {/* <a href="">Application Center</a> */} USER LIST
+                            </Breadcrumb.Item>
+                            {/* <Breadcrumb.Item>An Application</Breadcrumb.Item> */}
+                        </Breadcrumb>
+                    </div>
 
-                            <span style={{
-                                fontWeight: 600,
-                                fontSize: '20px'
-                            }}>User Administrator System</span>
-                        </div>
-                    </Col>
-
-                    <Col lg={12} md={12} sm={24} xs={24}>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
-                            <Col></Col>
-                            <Col></Col>
-                            <Col> <Avatar
-                                size={30}
-                                icon={<UserOutlined />}
-                            /></Col>
-                        </div>
-                    </Col>
-
-
-
-                    {/* </div> */}
-
-
-                </Header>
-                <Layout style={{ height: '1000px', backgroundColor: 'white' }}>
-
-                    {/* <Sider style={{backgroundColor:'white', borderRight:'1px solid grey'}}>
-
-
-                </Sider> */}
-                    <Content>
-                        {/* Table for User List */}
-                        <div style={{
-                            padding: '4em',
-                            alignSelf: 'center',
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center'
-
-                        }}>
-
-                            <div style={{ marginBottom: '30px' }}>
-                                <Breadcrumb>
-                                    <Breadcrumb.Item style={{ fontSize: '18px', fontWeight: '500' }}>DASHBOARD</Breadcrumb.Item>
-                                    <Breadcrumb.Item style={{ fontSize: '18px', fontWeight: '500', color:'#442F84' }}>
-                            {/* <a href="">Application Center</a> */} USER LIST
-                        </Breadcrumb.Item>
-                                    {/* <Breadcrumb.Item>An Application</Breadcrumb.Item> */}
-                                </Breadcrumb>
-                            </div>
-
-
-                            <div style={{ display: 'flex', gap: '5px', padding: '10px' }}>
+                    <div className="section">
+                        <Row gutter={16}>
+                            <div className="filter">
                                 <Col lg={6} md={6} sm={24} xs={24}>
                                     <Input
                                         placeholder="Search user name here"
@@ -202,104 +187,108 @@ const StudentList = () => {
                                 </Col>
 
                                 <Col lg={6} md={6} sm={24} xs={24}>
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight:'1em' }}>
-                                        <Button onClick={showModal} size='large'
-                                            style={{ backgroundColor: '#CF4392', color: 'white', borderRadius: '20px', border: 'none' }}>
-                                            <span>Add User</span><PlusCircleOutlined />
-                                        </Button>
-                                    </div>
+
+                                    <Button onClick={showModal} size='large' style={{ backgroundColor: '#CF4392', color: 'white', borderRadius: '20px', border: 'none' }}>
+                                        <span>Add User</span><PlusCircleOutlined />
+                                    </Button>
+
                                 </Col>
+
                             </div>
+                        </Row>
+                    </div>
 
-                            <div>
-                                <Row gutter={16}>
-                                    <Col lg={24} md={24} sm={24} xs={24}>
-                                        <div style={{ padding: '10px', borderRadius: '10px', background: 'white' }}>
-                                            <Table
-                                                dataSource={dataSource}
-                                                columns={columns}
-                                                pagination={false}
-                                            />
-                                        </div>
-                                    </Col>
+                    <div>
+                        <Row gutter={16}>
+                            <Col lg={24} md={24} sm={24} xs={24}>
+                                <div style={{ padding: '10px', borderRadius: '10px', background: 'white' }}>
+                                    <Table
+                                    style={{width:'100%'}}
+                                        dataSource={dataSource}
+                                        columns={columns}
+                                        pagination={false}
+                                        scroll={{ x: 10 }}
+                                    />
+                                </div>
+                            </Col>
 
-                                </Row>
-                            </div>
-                        </div>
+                        </Row>
+                    </div>
+                </div>
 
-                        <Modal
-                            title="Add New User"
-                            visible={isModalVisible}
-                            closable={false}
-                            onCancel={handleCancel}
-                            footer={null}
+                <Modal
+                    title="Add New User"
+                    visible={isModalVisible}
+                    closable={false}
+                    onCancel={handleCancel}
+                    footer={null}
+                >
+
+                    <div style={{ margin: '5px' }}>
+                        <Form
+                            name="basic"
+                            labelCol={{
+                                span: 8,
+                            }}
+                            wrapperCol={{
+                                span: 16,
+                            }}
+                            initialValues={{
+                                remember: true,
+                            }}
+                            onFinish={onFinish}
+                            onFinishFailed={onFinishFailed}
                         >
+                            <Form.Item
+                                label="Name"
+                                name="name"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input name here!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
 
-                            <div style={{ margin: '5px' }}>
-                                <Form
-                                    name="basic"
-                                    labelCol={{
-                                        span: 8,
-                                    }}
-                                    wrapperCol={{
-                                        span: 16,
-                                    }}
-                                    initialValues={{
-                                        remember: true,
-                                    }}
-                                    onFinish={onFinish}
-                                    onFinishFailed={onFinishFailed}
-                                >
-                                    <Form.Item
-                                        label="Name"
-                                        name="name"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please input name here!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                            >
+                                <Input />
+                            </Form.Item>
 
-                                    <Form.Item
-                                        label="Email"
-                                        name="email"
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                            <Form.Item
+                                label="Phone"
+                                name="phone"
+                            >
+                                <Input />
+                            </Form.Item>
 
-                                    <Form.Item
-                                        label="Phone"
-                                        name="phone"
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                            <Form.Item
+                                label="Address"
+                                name="address"
+                            >
+                                <Input />
+                            </Form.Item>
 
-                                    <Form.Item
-                                        label="Address"
-                                        name="address"
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                            <Form.Item
+                                wrapperCol={{
+                                    offset: 8,
+                                    span: 16,
+                                }}
+                            >
+                                <Button type="primary" htmlType="submit">
+                                    Done
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </div>
 
-                                    <Form.Item
-                                        wrapperCol={{
-                                            offset: 8,
-                                            span: 16,
-                                        }}
-                                    >
-                                        <Button type="primary" htmlType="submit">
-                                            Done
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
+                </Modal>
 
-                        </Modal>
-                    </Content>
-                </Layout>
+
                 <Footer style={{ textAlign: 'center', position: 'fixed', bottom: '0', left: '0', width: '100%', backgroundColor: 'white', boxShadow: ' grey' }}>
 
                     Web Design ©2021 Created by ahmadfarhan096
