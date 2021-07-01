@@ -3,7 +3,10 @@ import { Input, Button, Modal, Space, Table, Row, Col, Select, Popconfirm, Menu,
 import { DeleteFilled, EditFilled, PlusCircleOutlined } from '@ant-design/icons'
 import './user-form.scss'
 
-const UserForm = () => {
+const UserForm = ({ data, onSubmit, onSuccess }) => {
+
+    const [editing, setEditing] = useState(false)
+
 
     const usersData = [
         {
@@ -24,75 +27,39 @@ const UserForm = () => {
         address: ''
     }
 
-    const [users, setUsers] = useState(usersData)
     const [user, setUser] = useState(initialFormState)
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
+    useEffect(() => {
+        console.log(data)
+        if (data) {
+            setUser(data)
+        }
+        else {
+            setUser(initialFormState)
+        }
+    }, [data])
 
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text, record) => (
-                <span>{record.name}</span>
-            ),
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            render: (text, record) => (
-                <span>{record.email}</span>
-            ),
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone',
-            render: (text, record) => (
-                <span>{record.phone}</span>
-            ),
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-            render: (text, record) => (
-                <span>{record.address}</span>
-            ),
-        },
-        {
-            title: '',
-            key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <Button onClick={() => updateUser(record.id)}><EditFilled /></Button>
-                    <Popconfirm title="Are you sure？" okText="Yes" onConfirm={() => deleteUser(record.id)} cancelText="No">
-                        <Button danger ><DeleteFilled /></Button>
-                    </Popconfirm>
-
-                </Space>
-            ),
-        },
-    ];
-
-    const addUser = (user) => {
-        user.id = users.length + 1
-        setUsers([...users, user])
-    }
-
-    const updateUser = (user) => {
-        setUser({
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            address: user.address
+    console.log(user)
+    const addUser = async (user) => {
+        // body = what we will send to backend
+        const response = await fetch('http://localhost:4000/user', {
+            method: 'POST',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json'
+            },
         })
+
     }
 
-    const deleteUser = (id) => {
-        setUsers(users.filter((user) => user.id !== id))
+    const updateUser = async (user) => {
+        const response = await fetch('http://localhost:4000/user', {
+            method: 'PUT',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
     }
 
     const handleInputChange = (event) => {
@@ -101,8 +68,18 @@ const UserForm = () => {
     }
 
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
+    const onSubmitForm = async (e) => {
+        e.preventDefault();
+        console.log('Success:', user);
+        if (!data) {
+            await addUser(user)
+            onSuccess()
+        }
+        else if (data) {
+            console.log({ ...data, ...user })
+            await updateUser({ ...data, ...user })
+            onSuccess()
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -112,24 +89,27 @@ const UserForm = () => {
     return (
 
         <Form
+            
             name="basic"
             labelCol={{ span: 8, }}
             wrapperCol={{ span: 16, }}
-            initialValues={{ remember: true, }}
-            onFinish={(user) => {
-                if (!user.name) return
-                console.log(user)
-                addUser(user)
-                setUser(initialFormState)
-            }}
-            onFinishFailed={onFinishFailed}
+            initialValues={{ remember: true }}
+        // onFinish={onFinish}
+        // onFinish={(user) => {
+        //     if (!user.name) return
+        //     console.log(user)
+        //     addUser(user)
+        //     setUser(initialFormState)
+        // }}
+        // onFinishFailed={onFinishFailed}
 
         >
             <Form.Item
                 label="Name"
-                name="name"
-                value={user.name}
-                onChange={handleInputChange}
+                required={true}
+                // name="name"
+                // value={user.name || ''}
+                // onChange={handleInputChange} 
                 rules={[
                     {
                         required: true,
@@ -137,34 +117,44 @@ const UserForm = () => {
                     },
                 ]}
             >
-                <Input />
+                <Input
+                    name="name"
+                    value={user.name}
+                    onChange={handleInputChange}
+                />
             </Form.Item>
 
             <Form.Item
+                 required={true}
                 label="Email"
-                name="email"
-                value={user.email}
-                onChange={handleInputChange}
             >
-                <Input />
+                <Input
+                    name="email"
+                    value={user.email}
+                    onChange={handleInputChange}
+                />
             </Form.Item>
 
             <Form.Item
+                 required={true}
                 label="Phone"
-                name="phone"
-                value={user.phone}
-                onChange={handleInputChange}
             >
-                <Input />
+                <Input
+                    name="phone"
+                    value={user.phone}
+                    onChange={handleInputChange}
+                />
             </Form.Item>
 
             <Form.Item
+                 required={true}
                 label="Address"
-                name="address"
-                value={user.address}
-                onChange={handleInputChange}
             >
-                <Input />
+                <Input
+                    name="address"
+                    value={user.address}
+                    onChange={handleInputChange}
+                />
             </Form.Item>
 
             <Form.Item
@@ -173,8 +163,8 @@ const UserForm = () => {
                     span: 16,
                 }}
             >
-                <Button type="primary" htmlType="submit">
-                    Done
+                <Button type="primary" onClick={onSubmitForm}>
+                    {data ? 'Edit' : 'Add'}
                 </Button>
             </Form.Item>
         </Form>

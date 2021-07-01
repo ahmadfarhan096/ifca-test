@@ -10,16 +10,7 @@ const UserList = () => {
     const { Option } = Select;
 
 
-    const usersData = [
-        {
-            id: '1',
-            name: 'Ahmad Faris Bin Akmal',
-            email: 'faris@gmail.com',
-            phone: '01116949905',
-            address: 'Petaling Jaya, Selangor',
-
-        }
-    ];
+    const usersData = [];
 
 
     const initialFormState = {
@@ -33,7 +24,34 @@ const UserList = () => {
     const [users, setUsers] = useState(usersData)
     const [user, setUser] = useState(initialFormState)
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState(null)
+    const [result, setResult] = useState([]);
 
+    //integration - status api
+    const [status, setStatus] = useState('idle');
+    const [error, setError] = useState('')
+
+    const fetchApi = async () => {
+        try {
+            setStatus('loading')
+            const response = await fetch('http://localhost:4000/users', { method: 'GET' })
+            const data = await response.json()
+            console.log(data)
+
+            //call data from backend
+            setUsers(data.data)
+            setResult(data.data);
+            setStatus('success')
+        }
+        catch (error) {
+            setStatus('error')
+        }
+    }
+
+    useEffect(() => {
+        //fetch api must have sync
+        fetchApi()
+    }, [])
 
     const columns = [
         {
@@ -73,8 +91,8 @@ const UserList = () => {
             key: 'action',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button onClick={() => updateUser(record.id)}><EditFilled /></Button>
-                    <Popconfirm title="Are you sure？" okText="Yes" onConfirm={() => deleteUser(record.id)} cancelText="No">
+                    <Button onClick={() => onAction('edit',record)}><EditFilled /></Button>
+                    <Popconfirm title="Are you sure？" okText="Yes" onConfirm={() => onDelete(record.id)} cancelText="No">
                         <Button danger ><DeleteFilled /></Button>
                     </Popconfirm>
 
@@ -135,6 +153,34 @@ const UserList = () => {
         console.log(`selected ${value}`);
     }
 
+    const onAction = (type, data) => {
+        if(type==='add'){
+            setModalContent(
+                <UserForm onSuccess={() => {
+                    handleCancel();
+                    fetchApi()
+                }}/>
+            )
+            setIsModalVisible(true)
+        }
+        else if(type==='edit'){
+            setModalContent(
+                <UserForm data={data} onSuccess={() => {
+                    handleCancel();
+                    fetchApi()
+                }}/>
+            )
+            setIsModalVisible(true)
+        }
+    }
+
+    const onDelete = async (id)=>{
+        const response = await fetch(`http://localhost:4000/user/${id}`, {
+            method: 'DELETE',
+        })
+        fetchApi()
+    }
+
     console.log(users)
 
 
@@ -191,15 +237,27 @@ const UserList = () => {
                     </div>
 
                     <div className="section">
-                        <Row gutter={16}>
-                            <div className="filter">
+                        <Row gutter={[16, 16]} align="middle" className="filter" justify="space-between">
+                            {/* <div className="filter"> */}
                                 <Col lg={6} md={6} sm={24} xs={24}>
                                     <Input
+                                        type="search"
                                         placeholder="Search user name here"
+                                        onChange={(e) => {
+                                            let { value, name } = e.target;
+                                            value = value.toLowerCase();
+
+                                            setResult(users.filter(o => {
+                                                return o.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+                                                o.email.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+                                                o.phone.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+                                                o.address.toLowerCase().indexOf(value.toLowerCase()) !== -1
+                                            }))
+                                        }}
                                     />
                                 </Col>
 
-                                <Col lg={6} md={6} sm={24} xs={24}>
+                                {/* <Col lg={6} md={6} sm={24} xs={24}>
                                     <Select style={{ width: '100%' }} onChange={handleChange}>
                                         <Option value="jack">Jack</Option>
                                         <Option value="jack">Lucy</Option>
@@ -209,17 +267,20 @@ const UserList = () => {
 
                                 <Col lg={6} md={6} sm={24} xs={24}>
                                     <Button><SearchOutlined /></Button>
-                                </Col>
+                                </Col> */}
 
                                 <Col lg={6} md={6} sm={24} xs={24}>
 
-                                    <Button onClick={showModal} size='large' style={{ backgroundColor: '#CF4392', color: 'white', borderRadius: '20px', border: 'none' }}>
+                                    <Button 
+                                    onClick={()=>onAction('add')} 
+                                    size='large' 
+                                    style={{ backgroundColor: '#CF4392', color: 'white', borderRadius: '20px', border: 'none' }}>
                                         <span>Add User</span><PlusCircleOutlined />
                                     </Button>
 
                                 </Col>
 
-                            </div>
+                            {/* </div> */}
                         </Row>
                     </div>
 
@@ -229,7 +290,7 @@ const UserList = () => {
                                 <div style={{ padding: '10px', borderRadius: '10px', background: 'white' }}>
                                     <Table
                                         style={{ width: '100%' }}
-                                        dataSource={users}
+                                        dataSource={result.length > 0 ? result : users}
                                         columns={columns}
                                         pagination={false}
                                         scroll={{ x: 10 }}
@@ -248,10 +309,10 @@ const UserList = () => {
                     onCancel={handleCancel}
                     footer={null}
                 >
-
-                    <div style={{ margin: '5px' }}>
-                      <UserForm/>
-                    </div>
+                    { modalContent}
+                    {/* <div style={{ margin: '5px' }}>
+                        <UserForm />
+                    </div> */}
 
                 </Modal>
 
