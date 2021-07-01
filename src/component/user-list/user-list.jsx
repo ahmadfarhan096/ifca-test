@@ -1,14 +1,111 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Layout, Checkbox, Avatar, Breadcrumb, Input, Button, Modal, Space, Table, Row, Col, Select, Menu, Form } from 'antd';
+import { Layout, Checkbox, Avatar, Breadcrumb, Input, Button, Modal, Space, Table, Row, Col, Select, Popconfirm, Menu, Form } from 'antd';
 import { UserOutlined, DeleteFilled, SearchOutlined, EditFilled, PlusCircleOutlined } from '@ant-design/icons'
-import './student-list.scss'
+import './user-list.scss'
+import UserForm from '../user-form/user-form';
 
-const StudentList = () => {
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
+const UserList = () => {
 
     const { Header, Content, Footer, Sider } = Layout;
     const { Option } = Select;
+
+
+    const usersData = [
+        {
+            id: '1',
+            name: 'Ahmad Faris Bin Akmal',
+            email: 'faris@gmail.com',
+            phone: '01116949905',
+            address: 'Petaling Jaya, Selangor',
+
+        }
+    ];
+
+
+    const initialFormState = {
+        id: null,
+        name: '',
+        email: '',
+        phone: '',
+        address: ''
+    }
+
+    const [users, setUsers] = useState(usersData)
+    const [user, setUser] = useState(initialFormState)
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text, record) => (
+                <span>{record.name}</span>
+            ),
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+            render: (text, record) => (
+                <span>{record.email}</span>
+            ),
+        },
+        {
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone',
+            render: (text, record) => (
+                <span>{record.phone}</span>
+            ),
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+            render: (text, record) => (
+                <span>{record.address}</span>
+            ),
+        },
+        {
+            title: '',
+            key: 'action',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => updateUser(record.id)}><EditFilled /></Button>
+                    <Popconfirm title="Are you sure？" okText="Yes" onConfirm={() => deleteUser(record.id)} cancelText="No">
+                        <Button danger ><DeleteFilled /></Button>
+                    </Popconfirm>
+
+                </Space>
+            ),
+        },
+    ];
+
+    const addUser = (user) => {
+        user.id = users.length + 1
+        setUsers([...users, user])
+    }
+
+    const updateUser = (user) => {
+        setUser({
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            address: user.address
+        })
+    }
+
+    const deleteUser = (id) => {
+        setUsers(users.filter((user) => user.id !== id))
+    }
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target
+        setUser({ ...user, [name]: value })
+    }
+
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -38,80 +135,8 @@ const StudentList = () => {
         console.log(`selected ${value}`);
     }
 
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Ahmad Faris Bin Akmal',
-            email: 'faris@gmail.com',
-            phone: '01116949905',
-            address: 'Petaling Jaya, Selangor',
+    console.log(users)
 
-        },
-        {
-            key: '2',
-            name: 'Gurvin Sigh',
-            email: 'gurvin@gmail.com',
-            phone: '0179876089',
-            address: 'Puchong, Selangor',
-
-        },
-        {
-            key: '3',
-            name: 'Izzudin',
-            email: 'gurvin@gmail.com',
-            phone: '0179876089',
-            address: 'Puchong, Selangor',
-        },
-        {
-            key: '4',
-            name: 'Mary',
-            email: 'gurvin@gmail.com',
-            phone: '0179876089',
-            address: 'Puchong, Selangor',
-
-        },
-        {
-            key: '5',
-            name: 'David',
-            email: 'gurvin@gmail.com',
-            phone: '0179876089',
-            address: 'Puchong, Selangor',
-
-        },
-    ];
-
-    const columns = [
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: '',
-            key: 'action',
-            render: (text, record) => (
-                <Space size="middle">
-                    <Button onClick={showEdit}><EditFilled /></Button>
-                    <Button danger ><DeleteFilled /></Button>
-                </Space>
-            ),
-        },
-    ];
 
     return (
 
@@ -119,7 +144,7 @@ const StudentList = () => {
 
             <div className='page-container'>
 
-                
+
                 <Row gutter={16}>
                     <div className='header'>
                         <Col lg={12} md={12} sm={12} xs={12}>
@@ -133,7 +158,7 @@ const StudentList = () => {
                         </Col>
 
                         <Col lg={12} md={12} sm={12} xs={12}>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
 
                                 <Avatar
                                     size={30}
@@ -203,8 +228,8 @@ const StudentList = () => {
                             <Col lg={24} md={24} sm={24} xs={24}>
                                 <div style={{ padding: '10px', borderRadius: '10px', background: 'white' }}>
                                     <Table
-                                    style={{width:'100%'}}
-                                        dataSource={dataSource}
+                                        style={{ width: '100%' }}
+                                        dataSource={users}
                                         columns={columns}
                                         pagination={false}
                                         scroll={{ x: 10 }}
@@ -225,65 +250,7 @@ const StudentList = () => {
                 >
 
                     <div style={{ margin: '5px' }}>
-                        <Form
-                            name="basic"
-                            labelCol={{
-                                span: 8,
-                            }}
-                            wrapperCol={{
-                                span: 16,
-                            }}
-                            initialValues={{
-                                remember: true,
-                            }}
-                            onFinish={onFinish}
-                            onFinishFailed={onFinishFailed}
-                        >
-                            <Form.Item
-                                label="Name"
-                                name="name"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input name here!',
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Email"
-                                name="email"
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Phone"
-                                name="phone"
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                label="Address"
-                                name="address"
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                wrapperCol={{
-                                    offset: 8,
-                                    span: 16,
-                                }}
-                            >
-                                <Button type="primary" htmlType="submit">
-                                    Done
-                                </Button>
-                            </Form.Item>
-                        </Form>
+                      <UserForm/>
                     </div>
 
                 </Modal>
@@ -299,4 +266,4 @@ const StudentList = () => {
     )
 }
 
-export default StudentList;
+export default UserList;
